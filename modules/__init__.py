@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, Dict
+from pathlib import Path
 
 class GlobalParams(BaseModel):
     update: bool = False
@@ -12,6 +13,7 @@ class GlobalParams(BaseModel):
     silent: bool = False
     output: str = None
     concurrency: int = 25
+    local_home: str = str(Path.home())
 
 verify_domains = []        
 

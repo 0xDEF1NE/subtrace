@@ -1,6 +1,7 @@
 import yaml
 import os
 import concurrent.futures
+from pathlib import Path
 
 from modules.temp.templates import Templates
 from typing import Dict, Union, Any, List
@@ -105,7 +106,8 @@ class ParserTemplates():
             return d
 
 def parserAPIKeys(id: str):
-    api_keys = ParserTemplates().openTemplate("~/.config/subnerium/apikeys.yaml")
+
+    api_keys = ParserTemplates().openTemplate(f"{Gparams.local_home}/.config/subnerium/apikeys.yaml")
     try:
         return api_keys[id]
     except KeyError:

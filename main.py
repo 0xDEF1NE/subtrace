@@ -73,7 +73,7 @@ def handler(signum, frame):
     except SystemExit:
         # Ignora a exceção SystemExit
         pass
-    
+
 def main() -> None:
     args = parse_args()
     
@@ -83,9 +83,10 @@ def main() -> None:
     if not args.url:
         parser_error("Missing -u or --url option!")
         return  
+    
     if args.update:
-        update()
-        
+        update()    
+    
     if args.verbose and args.silent:
         parser_error("Verbose and silent flags are active")
     
@@ -98,13 +99,18 @@ def main() -> None:
             setattr(Gparams, key, value)
 
     verify_domains.append(Gparams.url)
-        
+
+    file_exists = str((f"{Gparams.local_home}/.config/subnerium/apikeys.yaml"))
+
+    if not os.path.isfile(file_exists):
+        print(f"{colorize_logs('error')} Subnerium is not installed! run sudo ./install.sh")
+        return -1
+    
     Worker = t.ParserTemplates()
     
-    print(f"{colorize_logs('success')} Templates loaded for subdomain enumeration: {Worker.countTemplates(Gparams.templates, 1)}")
-    #Worker.parseTemplate(f"{Gparams.templates}/subdomains/certspotter.yaml")
+    if Gparams.verbose:
+        print(f"{colorize_logs('success')} Templates loaded for subdomain enumeration: {Worker.countTemplates(Gparams.templates, 1)}")
     Worker.RunnerTemplates()
-    #print(f"{colorize('critical')} {template.info.name}")  # irá imprimir "Low" com a cor verde
 
     
 if __name__ == "__main__":

@@ -48,10 +48,10 @@ fi
 mkdir -p $DESTINATION
 mkdir -p ~/.config/subnerium
 
-mv apikeys.yaml ~/.config/subnerium
+echo "Moving apikeys.yaml to ~/.config/subnerium/apikeys.yaml"
+mv apikeys.yaml ~/.config/subnerium/apikeys.yaml
 
 chmod +x main.py
-
 
 cp -r * $DESTINATION
 ln -s "$DESTINATION/main.py" /usr/bin/subnerium
