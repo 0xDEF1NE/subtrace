@@ -1,0 +1,19 @@
+id: api-anubis
+
+info:
+    name: Anubis REST API
+    author: def1ne
+    severity: info
+    reference:
+      - https://jldc.me
+    tags: 
+        - subenum
+
+requests:
+  - method: GET
+    path: https://jldc.me/anubis/subdomains/{{domain}}
+
+    matchers:
+      - type: word
+        part: body
+        

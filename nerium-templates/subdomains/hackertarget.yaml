@@ -1,0 +1,19 @@
+id: regex-hackertarget
+
+info:
+    name: Regex HackerTarget
+    author: def1ne
+    severity: info
+    reference:
+      - https://hackertarget.com
+    tags: 
+        - subenum
+
+requests:
+  - method: GET
+    path: https://api.hackertarget.com/hostsearch/?q={{domain}}
+
+    matchers:
+      - type: regex
+        part: body
+        value: (.*),
