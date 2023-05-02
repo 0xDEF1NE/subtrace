@@ -5,7 +5,7 @@ class GlobalParams(BaseModel):
     update: bool = False
     version: bool = False
     url: Optional[str]
-    templates: str = "nerium-templates"
+    templates: str = "/usr/share/subnerium/nerium-templates"
     timeout: int = 10
     debug: bool = False
     verbose: bool = False
