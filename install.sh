@@ -48,6 +48,6 @@ fi
 mkdir -p $DESTINATION
 chmod +x main.py
 cp -r * $DESTINATION
-ln -s "$DESTINATION/main.py" /usr/bin/nerium
+ln -s "$DESTINATION/main.py" /usr/bin/subnerium
 
 echo "Installation complete!"
