@@ -105,7 +105,7 @@ class ParserTemplates():
             return d
 
 def parserAPIKeys(id: str):
-    api_keys = ParserTemplates().openTemplate("apikeys.yaml")
+    api_keys = ParserTemplates().openTemplate("~/.config/subnerium/apikeys.yaml")
     try:
         return api_keys[id]
     except KeyError:
