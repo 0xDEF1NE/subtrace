@@ -47,7 +47,12 @@ fi
 
 mkdir -p $DESTINATION
 mkdir -p ~/.config/subnerium
+
+mv apikeys.yaml ~/.config/subnerium
+
 chmod +x main.py
+
+
 cp -r * $DESTINATION
 ln -s "$DESTINATION/main.py" /usr/bin/subnerium
 
