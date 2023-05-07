@@ -1,12 +1,13 @@
 from pydantic import BaseModel
 from typing import Optional, Dict
 from pathlib import Path
+import os
 
 class GlobalParams(BaseModel):
     update: bool = False
     version: bool = False
     url: Optional[str]
-    templates: str = "/usr/share/subnerium/nerium-templates"
+    templates: str = f"{Path.home()}/.config/subnerium/templates"
     timeout: int = 10
     debug: bool = False
     verbose: bool = False

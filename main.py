@@ -27,7 +27,7 @@ def parse_args():
 
     # Template options
     optimizations = parser.add_argument_group("TEMPLATE")
-    optimizations.add_argument('-t', '--templates',metavar='', default=f"{lpath}/nerium-templates" ,help='list of template or template directory to run')
+    optimizations.add_argument('-t', '--templates',metavar='', default=f"/usr/share/subnerium/templates" ,help='list of template or template directory to run')
     
     # Optimizations
     optimizations = parser.add_argument_group("OPTIMIZATIONS")
@@ -83,7 +83,7 @@ def main() -> None:
     if not args.url:
         parser_error("Missing -u or --url option!")
         return  
-    
+
     if args.update:
         update()    
     
@@ -101,9 +101,9 @@ def main() -> None:
     verify_domains.append(Gparams.url)
 
     file_exists = str((f"{Gparams.local_home}/.config/subnerium/apikeys.yaml"))
-
+    
     if not os.path.isfile(file_exists):
-        print(f"{colorize_logs('error')} Subnerium is not installed! run sudo ./install.sh")
+        print(f"{colorize_logs('error')} Subnerium is not installed! run: sudo ./install.sh")
         return -1
     
     Worker = t.ParserTemplates()
