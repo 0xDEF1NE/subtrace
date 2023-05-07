@@ -19,9 +19,8 @@ git clone https://github.com/d3f1ne/subnerium
 You can install it by typing:
 
 ```
-pip3 install -r requirements.txt
 chmod +x install.sh
-sudo ./install.sh
+./install.sh
 ```
 
 ## Run
