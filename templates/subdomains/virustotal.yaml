@@ -1,0 +1,21 @@
+id: api-virustotal
+
+info:
+    name: VirusTotal REST API
+    author: def1ne
+    severity: info
+    reference:
+      - https://www.virustotal.com
+      - https://developers.virustotal.com/reference/overview
+    tags: 
+        - subenum
+
+requests:
+  - method: GET
+    path: https://www.virustotal.com/vtapi/v2/domain/report?apikey={{token}}&domain={{domain}}
+
+    matchers:
+      - type: word
+        part: body
+        words:
+          - subdomains

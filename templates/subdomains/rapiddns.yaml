@@ -1,0 +1,19 @@
+id: regex-rapiddns
+
+info:
+    name: RapidDNS Regex
+    author: def1ne
+    severity: info
+    reference:
+      - https://rapiddns.io
+    tags: 
+        - subenum
+
+requests:
+  - method: GET
+    path: https://rapiddns.io/subdomain/{{domain}}?full=1#result
+
+    matchers:
+      - type: regex
+        part: body
+        value: <td>((?:(?!\.)\w+\.)+(?!\d)[\w.]{2,})<\/td>

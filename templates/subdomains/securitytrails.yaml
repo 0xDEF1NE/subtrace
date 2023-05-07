@@ -1,0 +1,37 @@
+id: api-securitytrails
+
+info:
+    name: SecurityTrails REST API
+    author: def1ne
+    severity: info
+    reference:
+      - https://securitytrails.com
+      - https://docs.securitytrails.com
+      - https://securitytrails.com/corp/api
+    tags: 
+        - subenum
+
+requests:
+  - method: GET
+    path: https://api.securitytrails.com/v1/domain/{{domain}}/subdomains
+
+    headers:
+      APIKEY: "{{token}}"
+
+    matchers:
+      - type: word
+        part: body
+        words:
+          - subdomains
+
+      - type: status
+        words:
+          - message
+        
+        status:
+          - 429
+          - 401
+          - 403
+
+settings:
+  concatenate: True

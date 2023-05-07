@@ -1,0 +1,26 @@
+id: api-binaryedge
+
+info:
+    name: BinaryEdge REST API
+    author: def1ne
+    severity: info
+    reference:
+        - https://binaryedge.io
+        - https://docs.binaryedge.io
+    tags: 
+        - subenum
+        
+requests:
+  - method: GET
+    path: https://api.binaryedge.io/v2/query/domains/subdomain/{{domain}}
+
+    headers:
+      X-Key: "{{token}}"
+    
+    matchers:
+      - type: word
+        part: body
+        words: 
+          - events
+          
+
