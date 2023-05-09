@@ -44,6 +44,9 @@ subnerium -h
 - [virustotal](https://github.com/d3f1ne/subnerium)
 - [webarchive](https://github.com/d3f1ne/subnerium)
 - [whoisxml](https://github.com/d3f1ne/subnerium)
+- [shodan](https://github.com/d3f1ne/subnerium)
+- fullhunt.io(https://github.com/d3f1ne/subnerium)
+- bevigil(https://github.com/d3f1ne/subnerium)
 
 
 ### Disclaimer
