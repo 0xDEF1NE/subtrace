@@ -30,7 +30,8 @@ class requestHTTP():
         headers = template.requests[0].headers
         matchers = template.requests[0].matchers
         settings = template.settings
-
+        if not Gparams.silent:
+        	print(f"{colorize_logs('info')} Running Template: {info.name}")
             
         status = [a for a in matchers if a.type == 'status']
 
