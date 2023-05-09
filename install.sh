@@ -2,7 +2,7 @@
 
 DESTINATION="/usr/share/subnerium" 
 
-# Check if Python 3 is installed
+# Check if Python is installed
 if command -v python3 &>/dev/null; then
     echo "Python 3 is already installed."
 else
