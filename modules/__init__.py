@@ -4,7 +4,6 @@ from pathlib import Path
 import os
 
 class GlobalParams(BaseModel):
-    update: bool = False
     version: bool = False
     url: Optional[str]
     templates: str = f"{Path.home()}/.config/subnerium/templates"
