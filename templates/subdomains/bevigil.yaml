@@ -1,0 +1,33 @@
+id: api-bevigil
+
+info:
+    name: Bevigil REST API
+    author: def1ne
+    severity: info
+    reference:
+      - https://osint.bevigil.com/
+    tags: 
+        - subenum
+
+requests:
+  - method: GET
+    path: http://osint.bevigil.com/api/{{domain}}/subdomains/
+
+    headers:
+      X-Access-Token: "{{token}}"
+
+    matchers:
+      - type: word
+        part: body
+        words:
+          - subdomains
+
+      - type: status
+        words:
+          - message
+        
+        status:
+          - 400
+          - 401
+          - 402
+          - 422
