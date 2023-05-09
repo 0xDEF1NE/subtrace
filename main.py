@@ -19,7 +19,6 @@ def parse_args():
     parser.error = parser_error
     parser._optionals.title = "OPTIONS"
     parser.add_argument('-V', '--version', action='store_true', help='show nerium version')
-    parser.add_argument('--update', action='store_true', help='Update the script')
     
     # Target Options
     target = parser.add_argument_group('TARGET')
@@ -51,18 +50,6 @@ def parser_error(errmsg):
     print("Usage: nerium -u URL [Options] or use -h for help")
     print(f"{Fore.RED}Error:{Fore.RESET} {errmsg}")
     sys.exit()
-
-def update():
-    # Executa o comando git pull usando o subprocess
-    result = subprocess.run(['git', 'pull'], cwd='/usr/share/subnerium/', capture_output=True)
-
-    # Verifica se houve algum erro
-    if result.returncode != 0:
-        print(f"{colorize_logs('error')}: {result.stderr.decode('utf-8')}")
-    else:
-        print(f"{result.stderr.decode('utf-8')} Repository update successfully.")
-    
-    sys.exit()
     
 def handler(signum, frame):
     try:
@@ -80,12 +67,12 @@ def main() -> None:
     args_dict = vars(args)  # Converte os argumentos para um dicionário
     signal.signal(signal.SIGINT, handler)
 
+    if args.update:
+        update()    
+
     if not args.url:
         parser_error("Missing -u or --url option!")
         return  
-
-    if args.update:
-        update()    
     
     if args.verbose and args.silent:
         parser_error("Verbose and silent flags are active")
