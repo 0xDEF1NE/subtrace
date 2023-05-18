@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from colorama import Fore, Style
 import re
 
-from modules.temp.templates import Templates
+from modules.templates.templates import Templates
 from modules.color.color import colorize_logs
 from modules import Gparams, verify_domains
 
