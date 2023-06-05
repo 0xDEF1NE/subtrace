@@ -67,9 +67,6 @@ def main() -> None:
     args_dict = vars(args)  # Converte os argumentos para um dicionário
     signal.signal(signal.SIGINT, handler)
 
-    if args.update:
-        update()    
-
     if not args.url:
         parser_error("Missing -u or --url option!")
         return  
