@@ -6,6 +6,7 @@ import os
 class GlobalParams(BaseModel):
     version: bool = False
     url: Optional[str]
+    list: Optional[str]
     templates: str = f"{Path.home()}/.config/subnerium/templates"
     timeout: int = 10
     debug: bool = False
