@@ -23,6 +23,7 @@ def parse_args():
     # Target Options
     target = parser.add_argument_group('TARGET')
     target.add_argument('-u', '--url', metavar='', help='target URL/host to scan')
+    target.add_argument('-l', '--list', metavar='', help='target file to scan')
 
     # Template options
     optimizations = parser.add_argument_group("TEMPLATE")
@@ -67,9 +68,9 @@ def main() -> None:
     args_dict = vars(args)  # Converte os argumentos para um dicionário
     signal.signal(signal.SIGINT, handler)
 
-    if not args.url:
-        parser_error("Missing -u or --url option!")
-        return  
+    if not args.url and not args.list:
+        parser_error("Missing -u or --url or -l/--list option!")
+        return
     
     if args.verbose and args.silent:
         parser_error("Verbose and silent flags are active")
@@ -82,19 +83,25 @@ def main() -> None:
         if value is not None:  # Ignora argumentos com valor None
             setattr(Gparams, key, value)
 
-    verify_domains.append(Gparams.url)
-
-    file_exists = str((f"{Gparams.local_home}/.config/subnerium/apikeys.yaml"))
-    
-    if not os.path.isfile(file_exists):
-        print(f"{colorize_logs('error')} Subnerium is not installed! run: sudo ./install.sh")
-        return -1
-    
     Worker = t.ParserTemplates()
-    
+    if args.url:
+        verify_domains.append(Gparams.url)
+        Worker.RunnerTemplates()
+    if args.list:
+        if os.path.exists(Gparams.list) and os.path.isfile(Gparams.list):
+            with open(Gparams.list, 'r') as target_file:
+                for line in target_file:
+                    verify_domains.append(line.rstrip('\n'))
+                    Gparams.url = line
+                    Worker.RunnerTemplates()
+        else:
+            parser_error("Can't open the specified file")
+        
     if Gparams.verbose:
-        print(f"{colorize_logs('success')} Templates loaded for subdomain enumeration: {Worker.countTemplates(Gparams.templates, 1)}")
-    Worker.RunnerTemplates()
+	    print(f"{colorize_logs('success')} Templates loaded for subdomain enumeration: {Worker.countTemplates(Gparams.templates, 1)}")
+    #Worker.parseTemplate(f"{Gparams.templates}/subdomains/certspotter.yaml")
+    #print(f"{colorize('critical')} {template.info.name}")  # irá imprimir "Low" com a cor verde
+
 
     
 if __name__ == "__main__":
