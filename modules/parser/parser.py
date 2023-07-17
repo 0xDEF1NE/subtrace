@@ -3,7 +3,7 @@ import os
 import concurrent.futures
 from pathlib import Path
 
-from modules.templates.templates import Templates
+from modules.temp.templates import Templates
 from typing import Dict, Union, Any, List
 from modules import Gparams
 from modules.protocols.request import requestHTTP
