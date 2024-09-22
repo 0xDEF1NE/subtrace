@@ -10,7 +10,6 @@ use std::path::PathBuf;
 use serde_yaml;
 
 pub fn check_apikeys_file() -> Result<(), String> {
-    // Define o conteúdo padrão a ser escrito no arquivo, se necessário
     let default_content = r#"
 rapid-api-domain-records: ""
 virustotal: ""
