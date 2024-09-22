@@ -50,7 +50,7 @@ The command above results in the output below, displaying all the tool parameter
 ```yaml
 Subdomain Enumeration tool
 
-Usage: subtrace [OPTIONS] --domain <DOMAIN>
+Usage: subtrace [OPTIONS] --domain <DOMAIN> --templates <TEMPLATE_DIRECTORY>
        subtrace <COMMAND>
 
 TARGET:
@@ -58,14 +58,14 @@ TARGET:
           Specify the main domain to search for subdomains.
 
 TEMPLATE:
-  -t, --templates <TEMPLATES>
+  -t, --templates <TEMPLATE_DIRECTORY>
           Specify the directory with templates for subdomain scanning.
 
-  -l, --list-templates
-          List all installed templates.
+      --list-templates
+          List all templates.
 
 OUTPUT:
-  -o, --output <OUTPUT>
+  -o, --output <OUTPUT_FILE>
           Specify the filename to write the output to.
 
       --silent
