@@ -1,4 +1,0 @@
-python-dotenv
-colorama
-pydantic
-PyYAML
