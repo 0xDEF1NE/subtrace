@@ -21,7 +21,7 @@ impl MakeRequest {
 
     pub async fn execute_requests(&mut self, templates_to_process: Vec<Template>, domain: String, threads: i32) -> Result<Vec<String>, Box<dyn StdError>> {
         let client = Client::builder()
-            .timeout(Duration::from_secs(15)) // Tempo limite padrão
+            .timeout(Duration::from_secs(15))
             .build()
             .expect("Failed to build HTTP client");
 
@@ -36,25 +36,25 @@ impl MakeRequest {
                 match self.send_request(template_name.clone(), &client, &request.method, &request.path, &headers, request.data.as_ref()).await {
                     Ok(resp) => {
                         let status_code = resp.status().as_u16();
-                        let response_text = resp.text().await.unwrap_or_default(); // Retorna string vazia se falhar
+                        let response_text = resp.text().await.unwrap_or_default();
 
                         if let Some(matchers) = &request.matchers {
                             let new_subdomains = self.process_matchers(&response_text, status_code, matchers, template.clone(), template_name.clone());
                             for subdomain in &new_subdomains {
                                 if subdomain.contains(domain.as_str()) {
-                                    unique_subdomains.insert(subdomain.clone()); // Adicionar subdomínios ao HashSet
+                                    unique_subdomains.insert(subdomain.clone());
                                 }
                             }
                         }
                     }
                     Err(_) => {
-                        continue; // Continue para a próxima requisição
+                        continue; 
                     }
                 }
             }
         }
 
-        self.subdomains = unique_subdomains.into_iter().collect(); // Converter HashSet de volta para Vec
+        self.subdomains = unique_subdomains.into_iter().collect(); 
         Ok(self.subdomains.clone())
     }
 

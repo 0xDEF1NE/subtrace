@@ -7,6 +7,8 @@ use tokio::fs; // Usar a versão assíncrona do fs
 use log::{info,error};
 use crate::config::encode_base64;
 use crate::requests::requests::MakeRequest;
+use std::fs::OpenOptions;
+use std::io::Write;
 
 pub struct TemplateManager {
     templates: Vec<Template>,
@@ -59,7 +61,7 @@ impl TemplateManager {
         Ok(())
     }
 
-    pub async fn execute_loaded_templates(&self) -> Result<(), Box<dyn Error>> {
+    pub async fn execute_loaded_templates(&self, output_file: String) -> Result<(), Box<dyn Error>> {
         let templates_to_process: Vec<Template> = self.templates.clone();
     
         let mut init = MakeRequest::new();
@@ -67,8 +69,22 @@ impl TemplateManager {
             Ok(subdomains) => {
                 let len_sub = subdomains.len();
                 info!("Total Subdomains Found: {}", len_sub);
+                
+                let mut file = if !output_file.is_empty() {
+                    Some(OpenOptions::new()
+                        .create(true)
+                        .append(true)
+                        .open(output_file)?)
+                } else {
+                    None
+                };
+    
                 for subdomain in subdomains {
                     println!("{}", subdomain);
+                    
+                    if let Some(f) = file.as_mut() {
+                        writeln!(f, "{}", subdomain)?;
+                    }
                 }
             }
             Err(e) => {
@@ -104,7 +120,6 @@ impl TemplateManager {
         
         self.substitute_variables_recursive(&mut data, self.domain.as_str(), &token);
 
-        // Adicionar o campo domain a cada request
         if let serde_yaml::Value::Mapping(ref mut map) = data {
             if let Some(serde_yaml::Value::Sequence(requests)) = map.get_mut(&serde_yaml::Value::String("requests".to_string())) {
                 for request in requests.iter_mut() {
@@ -118,7 +133,6 @@ impl TemplateManager {
             }
         }
 
-        // Mapear templates para uma struct
         let template: Template = serde_yaml::from_value(data)?;
         self.templates.push(template);
 

@@ -14,7 +14,7 @@ pub fn build_app(interactive_output: bool) -> Command {
         .allow_external_subcommands(true)
         .disable_help_subcommand(true)
         .disable_version_flag(true)
-        .disable_help_flag(true) // Desativa o -h e --help automáticos
+        .disable_help_flag(true)
         .max_term_width(100)
         .about("Subdomain scanner tool")
         .arg(

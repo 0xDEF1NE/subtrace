@@ -89,7 +89,9 @@ async fn main() {
             if let Some(threads) = matches.get_one::<i32>("concurrency").cloned() {
                 manager.set_threads(threads);
             }
-            if let Err(e) = manager.execute_loaded_templates().await {
+            let output_file = matches.get_one::<String>("output").cloned().unwrap_or_default();
+
+            if let Err(e) = manager.execute_loaded_templates(output_file).await {
                 error!("Error executing requests: {}", e);
             }
 
