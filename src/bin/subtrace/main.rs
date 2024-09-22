@@ -14,7 +14,7 @@ async fn main() {
     let app = clap_app::build_app(interactive_output);
     let matches = app.clone().get_matches();
 
-    let silent_mode = matches.contains_id("silent");
+    let silent_mode = matches.get_flag("silent");
 
     let log_level = if silent_mode {
         "off"
@@ -61,7 +61,7 @@ async fn main() {
         }
     }
 
-    if matches.contains_id("listtemplates") {
+    if matches.get_flag("listtemplates") {
         let mut manager = TemplateManager::new("NULL".to_string());
         println!("Listing all available templates...");
         if let Some(templates_path) = matches.get_one::<String>("templates").cloned() {

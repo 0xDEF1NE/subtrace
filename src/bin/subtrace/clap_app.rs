@@ -33,7 +33,7 @@ pub fn build_app(interactive_output: bool) -> Command {
             Arg::new("templates")
                 .short('t')
                 .long("templates")
-                .value_name("TEMPLATES")
+                .value_name("TEMPLATE_DIRECTORY")
                 .help("List of template or template directory to run")
                 .long_help("Specify the directory with templates for subdomain scanning.")
                 .num_args(1)
@@ -41,12 +41,13 @@ pub fn build_app(interactive_output: bool) -> Command {
         )
         .arg(
             Arg::new("listtemplates")
-                .short('l')
-                .long("list-templates")
-                .help("List all installed templates.")
-                .num_args(0..=1)
-                .default_missing_value("always")
-                .help_heading("TEMPLATE"),
+            .short('l')
+            .long("list-templates")
+            .help("List all installed templates.")
+            .required(false)
+            .action(ArgAction::SetTrue)
+            .requires("templates")
+            .help_heading("TEMPLATE"),
         )
         .arg(
             Arg::new("output")
@@ -63,8 +64,8 @@ pub fn build_app(interactive_output: bool) -> Command {
                 .long("silent")
                 .help("Display findings only")
                 .long_help("Suppress verbose output and display only the findings.")
-                .num_args(0..=1)
-                .default_missing_value("always")
+                .required(false)
+                .action(ArgAction::SetTrue)
                 .help_heading("OUTPUT"),
         )
         .arg(
