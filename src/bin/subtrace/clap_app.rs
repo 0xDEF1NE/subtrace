@@ -86,7 +86,7 @@ pub fn build_app(interactive_output: bool) -> Command {
                 .long("debug")
                 .value_name("DEBUG")
                 .hide_default_value(true)
-                .default_value("0")
+                .default_value("3")
                 .help("Display errors and warnings. The default level is 0.")
                 .long_help("Set the debug level: 0 = ERROR, 1 = WARN, 2 = INFO, 3 = DEBUG")
                 .num_args(1)
