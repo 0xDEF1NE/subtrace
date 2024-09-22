@@ -1,0 +1,23 @@
+id: certspotter
+
+info:
+    name: CertSpotter REST API
+    author: def1ne
+    reference:
+      - https://certspotter.com/
+
+requests:
+  - method: GET
+    path: https://api.certspotter.com/v1/issuances?domain={{domain}}&include_subdomains=true&expand=dns_names
+
+    matchers:
+      - type: subdomains
+        filter: json
+        words:
+          - dns_names
+      
+      - type: status
+        words:
+          - message
+        status:
+          - 429

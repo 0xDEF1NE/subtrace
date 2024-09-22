@@ -1,0 +1,29 @@
+id: shodan
+
+info:
+    name: Shodan REST API
+    author: def1ne
+    reference:
+      - https://developer.shodan.io/api
+
+requests:
+  - method: GET
+    path: https://api.shodan.io/dns/domain/{{domain}}?key={{token}}
+
+    matchers:
+      - type: subdomains
+        filter: json
+        words:
+          - subdomains
+
+      - type: status
+        filter: json
+        words:
+          - error
+        
+        status:
+          - 401
+          - 400
+
+settings:
+  concatenate: True

@@ -1,0 +1,20 @@
+id: urlscan
+
+info:
+    name: Urlscan REST API
+    author: def1ne
+    reference:
+      - https://urlscan.io/
+
+
+requests:
+  - method: GET
+    path: https://urlscan.io/api/v1/search/?q=domain:{{domain}}
+
+    matchers:
+      - type: subdomains
+        filter: json
+        words:
+          - results
+          - page
+          - domain

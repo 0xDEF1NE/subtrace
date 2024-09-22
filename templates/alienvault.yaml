@@ -1,0 +1,18 @@
+id: alienvault
+
+info:
+    name: AlienVault REST API
+    author: def1ne
+    reference:
+      - https://otxt.alienvault.org/
+
+requests:
+  - method: GET
+    path: https://otx.alienvault.com/api/v1/indicators/domain/{{domain}}/passive_dns
+
+    matchers:
+      - type: subdomains
+        filter: json
+        words:
+          - passive_dns
+          - hostname

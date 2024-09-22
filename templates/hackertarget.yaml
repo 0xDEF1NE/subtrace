@@ -1,0 +1,18 @@
+id: hackertarget
+
+info:
+    name: Regex HackerTarget
+    author: def1ne
+    reference:
+      - https://hackertarget.com
+
+requests:
+  - method: GET
+    path: https://api.hackertarget.com/hostsearch/?q={{domain}}
+
+    matchers:
+      - type: subdomains
+        filter: regex
+        value: (.*),
+
+        

@@ -1,0 +1,17 @@
+id: webarchive
+
+info:
+    name: WebArchive REST API
+    author: def1ne
+    severity: info
+    reference:
+      - https://web.archive.org/
+      
+requests:
+  - method: GET
+    path: https://web.archive.org/cdx/search/cdx?url=*.{{domain}}/*&output=json&collapse=urlkey
+
+    matchers:
+      - type: subdomains
+        filter: regex
+        value: https?://([^/:]+)

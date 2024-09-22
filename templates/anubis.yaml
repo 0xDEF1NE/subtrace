@@ -1,0 +1,16 @@
+id: anubis
+
+info:
+    name: Anubis REST API
+    author: def1ne
+    reference:
+      - https://jldc.me
+
+requests:
+  - method: GET
+    path: https://jldc.me/anubis/subdomains/{{domain}}
+
+    matchers:
+      - type: subdomains
+        filter: json
+        

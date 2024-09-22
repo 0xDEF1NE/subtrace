@@ -1,0 +1,36 @@
+[package]
+name = "subtrace"
+version = "0.1.0"
+authors = ["Daniel Santos <daniel.santos@firemaze.com.br>"]
+description = "A cat(1) clone with wings."
+homepage = "https://github.com/d3f1ne/subtrace"
+repository = "https://github.com/d3f1ne/subtrace"
+license = "MIT OR Apache-2.0"
+edition = "2021"
+categories = ["command-line-utilities"]
+
+[dependencies]
+chrono = "0.4"
+log = "0.4"
+env_logger = "0.10"
+colored = "2.0"
+clap = { version = "4.5.8", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.9"
+dirs = "4.0"
+serde_json = "1.0.108"
+base64 = "0.22.1"
+once_cell = "1.10.0"
+atty = "0.2.14"
+regex = "1.10.2"
+tokio = { version = "1", features = ["full"] }
+lazy_static = "1.4.0"
+reqwest = { version = "0.11", features = ["json", "blocking"] }
+
+[dev-dependencies]
+lazy_static = "1.4.0"
+
+[profile.release]
+lto = true
+strip = true
+codegen-units = 1

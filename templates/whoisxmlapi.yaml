@@ -1,0 +1,32 @@
+id: whoisxmlapi
+
+info:
+    name: WhoisXML REST API
+    author: def1ne
+    reference:
+      - https://whoisxmlapi.com
+      - https://whois.whoisxmlapi.com/documentation/making-requests
+
+requests:
+  - method: GET
+    path: https://subdomains.whoisxmlapi.com/api/v1?domainName={{domain}}&apiKey={{token}}
+    
+    matchers:
+      - type: subdomains
+        filter: json
+        words:
+          - result
+          - records
+          - domain
+
+      - type: status
+        filter: json
+        words:
+          - messages
+        
+        status:
+          - 403
+          - 400
+          - 401
+          - 422
+          - 429

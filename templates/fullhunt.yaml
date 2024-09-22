@@ -1,0 +1,30 @@
+id: fullhunt
+
+info:
+    name: FullHunt.io REST API
+    author: def1ne
+    reference:
+      - https://api-docs.fullhunt.io/#introduction
+      - https://fullhunt.io/
+
+requests:
+  - method: GET
+    path: https://fullhunt.io/api/v1/domain/{{domain}}/details
+
+    headers:
+      X-API-KEY: "{{token}}"
+
+    matchers:
+      - type: subdomains
+        filter: json
+        words:
+          - hosts
+          - host
+
+      - type: status
+        words:
+          - message
+        
+        status:
+          - 429
+          - 400
