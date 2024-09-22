@@ -37,8 +37,6 @@ Then, move the compiled binary to `/usr/bin/` to make it globally accessible:
 
 ```bash
 sudo mv target/release/subtrace /usr/bin/
-mkdir ~/.config/subtrace
-mv apikeys.yaml ~/.config/subtrace/
 ```
 
 # Usage
