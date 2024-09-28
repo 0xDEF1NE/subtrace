@@ -24,11 +24,10 @@ once_cell = "1.10.0"
 atty = "0.2.14"
 regex = "1.10.2"
 tokio = { version = "1", features = ["full"] }
-lazy_static = "1.4.0"
 reqwest = { version = "0.11", features = ["json", "blocking"] }
+trust-dns-client = "^0.22"
+trust-dns-resolver = "^0.22"
 
-[dev-dependencies]
-lazy_static = "1.4.0"
 
 [profile.release]
 lto = true

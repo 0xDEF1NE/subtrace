@@ -7,13 +7,38 @@ use chrono::Local;
 use colored::*;
 use subtrace::config::check_apikeys_file;
 use subtrace::templates::TemplateManager;
+use subtrace::modules::zone_transfer::call_zone_transfer;
 
-#[tokio::main] 
+#[tokio::main]
 async fn main() {
     let interactive_output = atty::is(atty::Stream::Stdout);
     let app = clap_app::build_app(interactive_output);
     let matches = app.clone().get_matches();
 
+    init_logger(&matches);
+
+    if let Err(e) = check_apikeys_file() {
+        error!("Error loading API keys file: {}", e);
+        return;
+    } else {
+        info!("API keys file is valid.");
+    }
+
+    if matches.get_flag("listtemplates") {
+        list_templates(&matches).await;
+        return;
+    }
+
+    if let Some(domain) = matches.get_one::<String>("domain").cloned() {
+        zone_transfer(&domain).await;
+
+        passive_start(domain, &matches).await;
+    } else {
+        error!("Domain not provided.");
+    }
+}
+
+fn init_logger(matches: &clap::ArgMatches) {
     let silent_mode = matches.get_flag("silent");
 
     let log_level = if silent_mode {
@@ -27,7 +52,6 @@ async fn main() {
             _ => "error",
         }
     };
-    
 
     Builder::from_env(Env::default().default_filter_or(log_level))
         .format(|buf, record| {
@@ -50,55 +74,56 @@ async fn main() {
             )
         })
         .init();
+}
 
-    match check_apikeys_file() {
-        Ok(_) => {
-            info!("API keys file is valid.");
-        }
-        Err(e) => {
-            error!("Error loading API keys file: {}", e);
+async fn list_templates(matches: &clap::ArgMatches) {
+    let mut manager = TemplateManager::new("NULL".to_string());
+    println!("Listing all available templates...");
+
+    if let Some(templates_path) = matches.get_one::<String>("templates").cloned() {
+        if let Err(e) = manager.load_templates(Some(templates_path)).await {
+            error!("Error loading templates: {}", e);
             return;
         }
-    }
-
-    if matches.get_flag("listtemplates") {
-        let mut manager = TemplateManager::new("NULL".to_string());
-        println!("Listing all available templates...");
-        if let Some(templates_path) = matches.get_one::<String>("templates").cloned() {
-            if let Err(e) = manager.load_templates(Some(templates_path)).await {
-                error!("Error loading templates: {}", e);
-                return;
-            }
-            if let Err(e) = manager.list_loaded_templates().await {
-                error!("Error executing requests: {}", e);
-            }
-        } else {
-            info!("No templates path provided.");
-        }
-        return;
-    }
-
-    if let Some(domain) = matches.get_one::<String>("domain").cloned() {
-        let mut manager = TemplateManager::new(domain);
-        
-        if let Some(templates_path) = matches.get_one::<String>("templates").cloned() {
-            if let Err(e) = manager.load_templates(Some(templates_path)).await {
-                error!("Error loading templates: {}", e);
-                return;
-            }
-            if let Some(threads) = matches.get_one::<i32>("concurrency").cloned() {
-                manager.set_threads(threads);
-            }
-            let output_file = matches.get_one::<String>("output").cloned().unwrap_or_default();
-
-            if let Err(e) = manager.execute_loaded_templates(output_file).await {
-                error!("Error executing requests: {}", e);
-            }
-
-        } else {
-            info!("No templates path provided.");
+        if let Err(e) = manager.list_loaded_templates().await {
+            error!("Error listing templates: {}", e);
         }
     } else {
-        error!("Domain not provided.");
+        info!("No templates path provided.");
+    }
+}
+
+async fn zone_transfer(domain: &str) {
+    let domains = call_zone_transfer(domain).await;
+    if !domains.is_empty() {
+        info!("Zone Transfer: ");
+        for domain in &domains {
+            println!("{}", domain);
+        }
+    } else {
+        info!("Zone Transfer: No domains found in zone transfer.");
+    }
+}
+
+async fn passive_start(domain: String, matches: &clap::ArgMatches) {
+    let mut manager = TemplateManager::new(domain);
+
+    if let Some(templates_path) = matches.get_one::<String>("templates").cloned() {
+        if let Err(e) = manager.load_templates(Some(templates_path)).await {
+            error!("Error loading templates: {}", e);
+            return;
+        }
+
+        if let Some(threads) = matches.get_one::<i32>("concurrency").cloned() {
+            manager.set_threads(threads);
+        }
+
+        let output_file = matches.get_one::<String>("output").cloned().unwrap_or_default();
+
+        if let Err(e) = manager.execute_loaded_templates(output_file).await {
+            error!("Error executing requests: {}", e);
+        }
+    } else {
+        info!("No templates path provided.");
     }
 }
