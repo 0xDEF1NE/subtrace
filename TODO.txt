@@ -1,7 +1,8 @@
-[ ] CSP Probing
-[ ] TLS Probing
-[ ] CNAME Probing
-[ ] API Key rotation
-[ ] Implement pagination in templates
-[ ] Multithreading on execute_requests
+[ OK ] Zone Tranfer
+[    ] CSP Probing
+[    ] TLS Probing
+[    ] CNAME Probing
+[    ] API Key rotation
+[    ] Implement pagination in templates
+[    ] Multithreading on execute_requests
 
