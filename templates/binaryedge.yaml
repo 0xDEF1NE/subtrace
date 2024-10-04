@@ -20,5 +20,3 @@ requests:
         filter: json
         words: 
           - events
-          
-

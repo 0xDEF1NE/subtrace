@@ -17,11 +17,14 @@ async fn main() {
 
     init_logger(&matches);
 
-    if let Err(e) = check_apikeys_file() {
-        error!("Error loading API keys file: {}", e);
-        return;
-    } else {
-        info!("API keys file is valid.");
+    match check_apikeys_file() {
+        Ok(_) => {
+            info!("API keys file is valid.");
+        }
+        Err(e) => {
+            error!("Error loading API keys file: {}. Retrying...", e);
+            std::thread::sleep(std::time::Duration::from_secs(1));
+        }
     }
 
     if matches.get_flag("listtemplates") {
