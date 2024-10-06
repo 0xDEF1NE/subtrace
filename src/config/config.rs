@@ -91,6 +91,11 @@ pub fn get_apikeys() -> Result<HashMap<String, Value>, String> {
     Ok(result)
 }
 
+pub fn concatenate_domain(subdomain: &str, domain: &str) -> String {
+    format!("{}.{}", subdomain, domain)
+}
+
+
 pub fn return_api(api_keys: &HashMap<String, Value>, key: &str) -> String {
     let api_key = api_keys.get(key).and_then(|api| {
         api.as_str().map(|api_str| {

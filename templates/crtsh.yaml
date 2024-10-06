@@ -9,7 +9,6 @@ info:
 requests:
   - method: GET
     path: https://crt.sh/?q=%25.{{domain}}&output=json
-
     matchers:
       - type: subdomains
         filter: json

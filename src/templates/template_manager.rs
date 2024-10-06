@@ -9,7 +9,7 @@ use crate::config::encode_base64;
 use crate::requests::requests::MakeRequest;
 use std::fs::OpenOptions;
 use std::io::Write;
-
+use std::collections::{HashMap, HashSet};
 pub struct TemplateManager {
     templates: Vec<Template>,
     t_temp: Vec<PathBuf>,
@@ -63,12 +63,14 @@ impl TemplateManager {
 
     pub async fn execute_loaded_templates(&self, output_file: String) -> Result<(), Box<dyn Error>> {
         let templates_to_process: Vec<Template> = self.templates.clone();
-    
+        let mut seen_subdomains = HashSet::new();
         let mut init = MakeRequest::new();
         match init.execute_requests(templates_to_process, self.domain.clone(), self.threads).await {
             Ok(subdomains) => {
                 let len_sub = subdomains.len();
                 info!("Total Subdomains Found: {}", len_sub);
+                
+                let mut subdomain_count: HashMap<String, usize> = HashMap::new();
                 
                 let mut file = if !output_file.is_empty() {
                     Some(OpenOptions::new()
@@ -79,19 +81,32 @@ impl TemplateManager {
                     None
                 };
     
-                for subdomain in subdomains {
+                for (finder, subdomain) in subdomains {
+                    // Se o subdomínio já foi visto, continue para a próxima iteração
+                    if seen_subdomains.contains(&subdomain) {
+                        continue;
+                    }
+                
+                    // Adiciona o subdomínio ao HashSet
+                    seen_subdomains.insert(subdomain.clone());
+                
+                    *subdomain_count.entry(finder.clone()).or_insert(0) += 1;
+                
                     println!("{}", subdomain);
-                    
+                
                     if let Some(f) = file.as_mut() {
                         writeln!(f, "{}", subdomain)?;
                     }
+                }
+    
+                for (finder, count) in subdomain_count {
+                    info!("{} found {} subdomains", finder, count);
                 }
             }
             Err(e) => {
                 error!("Failed to execute requests: {:?}", e);
             }
         }
-    
         Ok(())
     }
     
@@ -138,9 +153,11 @@ impl TemplateManager {
 
         Ok(())
     }
+
     pub fn set_threads(&mut self, concurrency: i32){
         self.threads = concurrency;
     }
+    
     fn substitute_variables_recursive(&self, data: &mut serde_yaml::Value, domain: &str, token: &str) {
         match data {
             serde_yaml::Value::String(s) => {

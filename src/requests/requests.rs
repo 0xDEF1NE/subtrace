@@ -1,4 +1,5 @@
 use crate::templates::structs::{Template, Matcher, Settings};
+use crate::config::config::concatenate_domain;
 use std::collections::HashSet;
 use reqwest::Client;
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
@@ -19,31 +20,38 @@ impl MakeRequest {
         }
     }
 
-    pub async fn execute_requests(&mut self, templates_to_process: Vec<Template>, domain: String, threads: i32) -> Result<Vec<String>, Box<dyn StdError>> {
+    pub async fn execute_requests(&mut self, templates_to_process: Vec<Template>, domain: String, threads: i32) -> Result<Vec<(String, String)>, Box<dyn StdError>> {
         let client = Client::builder()
             .timeout(Duration::from_secs(15))
             .build()
             .expect("Failed to build HTTP client");
-
-        let mut unique_subdomains = HashSet::new();
-
+    
+        let mut unique_subdomains: HashSet<(String, String)> = HashSet::new();
+    
         for template in templates_to_process {
             let template_name = template.info.name.clone();
-
+            let concatenate = template.settings.as_ref().map_or(false, |s| s.concatenate.unwrap_or(false));
+    
             for request in &template.requests {
                 let headers = self.build_headers(request.headers.as_ref())?;
-
+    
                 match self.send_request(template_name.clone(), &client, &request.method, &request.path, &headers, request.data.as_ref()).await {
                     Ok(resp) => {
                         let status_code = resp.status().as_u16();
                         let response_text = resp.text().await.unwrap_or_default();
-
+    
                         if let Some(matchers) = &request.matchers {
                             let new_subdomains = self.process_matchers(&response_text, status_code, matchers, template.clone(), template_name.clone());
-                            for subdomain in &new_subdomains {
-                                if subdomain.contains(domain.as_str()) {
-                                    unique_subdomains.insert(subdomain.clone());
-                                }
+                            
+                            for subdomain in new_subdomains {
+                                // Concatena com o domínio se necessário
+                                let full_domain = if concatenate {
+                                    concatenate_domain(&subdomain, &domain)
+                                } else {
+                                    subdomain.clone()
+                                };
+                                
+                                unique_subdomains.insert((template_name.clone(), full_domain));
                             }
                         }
                     }
@@ -53,9 +61,11 @@ impl MakeRequest {
                 }
             }
         }
-
-        self.subdomains = unique_subdomains.into_iter().collect(); 
-        Ok(self.subdomains.clone())
+    
+        // Coletar os elementos do HashSet em um Vec<(String, String)>
+        let result_vec: Vec<(String, String)> = unique_subdomains.into_iter().collect();
+    
+        Ok(result_vec)
     }
 
     async fn send_request(&self, template_name: String, client: &Client, method: &str, path: &str, headers: &HeaderMap, data: Option<&String>) -> Result<reqwest::Response, Box<dyn StdError>> {
