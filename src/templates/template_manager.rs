@@ -10,6 +10,7 @@ use crate::requests::requests::MakeRequest;
 use std::fs::OpenOptions;
 use std::io::Write;
 use std::collections::{HashMap, HashSet};
+
 pub struct TemplateManager {
     templates: Vec<Template>,
     t_temp: Vec<PathBuf>,
@@ -67,8 +68,6 @@ impl TemplateManager {
         let mut init = MakeRequest::new();
         match init.execute_requests(templates_to_process, self.domain.clone(), self.threads).await {
             Ok(subdomains) => {
-                let len_sub = subdomains.len();
-                info!("Total Subdomains Found: {}", len_sub);
                 
                 let mut subdomain_count: HashMap<String, usize> = HashMap::new();
                 
@@ -98,7 +97,8 @@ impl TemplateManager {
                         writeln!(f, "{}", subdomain)?;
                     }
                 }
-    
+                let len_sub = seen_subdomains.len();
+                info!("Total Subdomains Found: {}", len_sub);
                 for (finder, count) in subdomain_count {
                     info!("{} found {} subdomains", finder, count);
                 }
