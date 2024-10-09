@@ -81,12 +81,10 @@ impl TemplateManager {
                 };
     
                 for (finder, subdomain) in subdomains {
-                    // Se o subdomínio já foi visto, continue para a próxima iteração
                     if seen_subdomains.contains(&subdomain) {
                         continue;
                     }
                 
-                    // Adiciona o subdomínio ao HashSet
                     seen_subdomains.insert(subdomain.clone());
                 
                     *subdomain_count.entry(finder.clone()).or_insert(0) += 1;
