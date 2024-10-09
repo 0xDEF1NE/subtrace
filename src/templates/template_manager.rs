@@ -1,9 +1,9 @@
-use super::structs::Template; // Certifique-se de que Matcher está sendo importado
+use super::structs::Template; 
 use crate::config::{get_apikeys, return_api};
 use dirs::home_dir;
 use std::path::PathBuf;
 use std::error::Error;
-use tokio::fs; // Usar a versão assíncrona do fs
+use tokio::fs; 
 use log::{info,error};
 use crate::config::encode_base64;
 use crate::requests::requests::MakeRequest;
