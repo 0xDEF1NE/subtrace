@@ -10,7 +10,7 @@ pub struct ITemplate {
 pub struct Template {
     pub id: String,
     pub info: Info,
-    pub requests: Vec<Request>,  // Alterado para Vec<Request>
+    pub requests: Vec<Request>,
     pub settings: Option<Settings>,
 }
 
@@ -29,7 +29,7 @@ pub struct Settings {
 pub struct Request {
     pub domain: String,
     pub method: String,
-    pub path: String,  // Alterado de url para path para corresponder ao YAML fornecido
+    pub path: String,
     pub data: Option<String>,
     pub headers: Option<HashMap<String, String>>,
     pub matchers: Option<Vec<Matcher>>,
